@@ -11,7 +11,8 @@ from langchain.messages import ToolMessage
 
 from typing import Literal
 from langgraph.graph import StateGraph, START, END
-
+from IPython.display import Image, display
+from langchain.messages import HumanMessage
 
 load_dotenv()
 
@@ -127,8 +128,17 @@ agent_builder.add_edge("tool_node", "llm_call")
 agent = agent_builder.compile()
 
 # Show the agent
-from IPython.display import Image, display
+
 display(Image(agent.get_graph(xray=True).draw_mermaid_png()))
+
+# # Generate the PNG bytes
+# png_bytes = agent.get_graph(xray=True).draw_mermaid_png()
+
+# # Write the bytes to a file
+# with open("agent_graph.png", "wb") as f:
+#     f.write(png_bytes)
+
+# print("Graph saved as agent_graph.png! Open it from your file explorer.")
 
 # Invoke
 from langchain.messages import HumanMessage
@@ -136,3 +146,4 @@ messages = [HumanMessage(content="Add 3 and 4.")]
 messages = agent.invoke({"messages": messages})
 for m in messages["messages"]:
     m.pretty_print()
+
